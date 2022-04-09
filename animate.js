@@ -49,7 +49,6 @@ function printPlayer() {
     let p1 = {}
     let p2 = {}
     let dir = player.d
-    console.log(player.pd)
     if (dir == 0) {
         dir = player.pd
     }

@@ -14,16 +14,52 @@ const speed = 0.07
 const mouthSpeed = 15
 
 
-var map = [
-    {x:10,y:10}
-]
+var map = []
 var player = {x:3,y:3,d:1,nd:1,pd:1,ma:30}
 
+//border
 blocks(0,0,20,1)
 blocks(0,15,20,1)
 blocks(0,0,1,15)
 blocks(19,0,1,15)
-blocks(10,4,2,6)
+//E
+blocks(2,2,1,5)
+blocks(3,2,2,1)
+blocks(3,4,2,1)
+blocks(3,6,2,1)
+//D
+blocks(6,2,1,5)
+blocks(8,2,1,5)
+blocks(7,2,1,1)
+blocks(7,6,1,1)
+//E
+blocks(10,2,1,5)
+blocks(11,2,2,1)
+blocks(11,4,2,1)
+blocks(11,6,2,1)
+//N
+blocks(14,2,1,5)
+blocks(17,2,1,5)
+blocks(15,3,1,2)
+blocks(16,4,1,2)
+//P
+blocks(2,8,1,6)
+blocks(5,8,1,3)
+blocks(3,8,2,1)
+blocks(3,10,2,1)
+//A
+blocks(7,8,1,6)
+blocks(11,8,1,6)
+blocks(8,8,3,1)
+blocks(8,11,3,1)
+//C
+blocks(13,8,1,6)
+blocks(14,8,4,1)
+blocks(14,13,4,1)
+//other
+blocks(15,10,4,2)
+blocks(9,13,1,2)
+blocks(4,12,2,2)
 
 function move() {
     let x = player.x
@@ -33,23 +69,24 @@ function move() {
         x = Math.round(x)
         y = Math.round(y)
         player.d = player.nd
-        let blocked = false
+        const d1 = preDir
+        const d2 = player.nd
+        let blocked = 0
         const udBlocks = map.filter(b => b.x == x & Math.abs(b.y-y) == 1)
         const rlBlocks = map.filter(b => b.y == y & Math.abs(b.x-x) == 1)
-        if (udBlocks.length > 0) {
-            const up = !!udBlocks.find(b => b.y == y-1)
-            if (player.d == 2 & up | player.d == 4 & !up) {
-                blocked = true
-            }
+        const up = !!udBlocks.find(b => b.y == y-1)
+        const down = !!udBlocks.find(b => b.y == y+1)
+        const right = !!rlBlocks.find(b => b.x == x+1)
+        const left = !!rlBlocks.find(b => b.x == x-1)
+        if (d2 == 1 & right | d2 == 2 & up | d2 == 3 & left | d2 == 4 & down) {
+            blocked = 1
         }
-        if (rlBlocks.length > 0) {
-            const right = !!rlBlocks.find(b => b.x == x+1)
-            if (player.d == 1 & right | player.d == 3 & !right) {
-                blocked = true
-            }
+        if ((blocked == 1 | d1 == d2) & (d1 == 1 & right | d1 == 2 & up | d1 == 3 & left | d1 == 4 & down)) {
+            blocked = 2
         }
-        if (blocked) {
-            if (player.d == preDir & preDir != 0) {
+        if (blocked > 0) {
+            console.log(blocked);
+            if (blocked == 2) {
                 player.pd = preDir
                 preDir = 0
                 player.d = 0
